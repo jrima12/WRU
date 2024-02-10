@@ -1,13 +1,20 @@
+#TODO:  Make different special characters as separators
+#       Change itertools permutation to itertools product for repeating words
+#       Make options of common number patterns
+#       Add Special Characters to the end
+
 import argparse
 import itertools
-import re
+from pyleetspeak import LeetSpeaker
+
 #Global vars hard coded to make editing easier for user
 capital_letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 lower_letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
 numbers = ["0","1","2","3","4","5","6","7","8","9"]
-common_specials = ["!","@","#","$","%","^","&","*","-","_","+",".","?",]
-other_specials = ["=","|","]","}","[","{","'",'"',";",":","/",">",",","<"]
+common_specials = ["!","@","#","$","%","&","*","-","_",".","?"]
+other_specials = ["=","|","]","}","[","{","'",'"',";",":","/",">",",","<","+","^"]
 months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+common_special_combos = []
 
 mode_help = """
     Choose your mode:\n\n
@@ -16,222 +23,172 @@ mode_help = """
         3) Interactive email generator\n
         4) Interactive wordsmith
         5) Generate pin numbers
-"""
+"""       
 
-def make_number_addons():
-    addons = []
-    for i in numbers:
-        for j in range(1,7):
-            addons.append(i*j)
-    for j in range(0,10):
-        string=""
-        for i in range(j,j+6):
-            try:
-                string = string + numbers[i]
-                addons.append(string)
-                addons.append(string[::-1])
-            except:
-                pass
-        j += 1
-    for i in range(0,10):
-        string = ""
-        for i in range (0,10,2):
-            try:
-                string=string+numbers[i]
-                addons.append(string)
-                addons.append(string[::-1])
-            except:
-                pass
-    for i in range(0,10):
-        string = ""
-        for i in range (1,10,2):
-            try:
-                string=string+numbers[i]
-                addons.append(string)
-                addons.append(string[::-1])
-            except:
-                pass
-    numlist = []
-    for i in addons:
-        if i not in numlist:
-            numlist.append(i)
-    return numlist
 
-def parsefile(filename):
-    filewords = []
-    try:
-        with open(filename,'r') as f:
-            filewords.append(f.split())
-    except:
-        pass
-    return filewords
-
-def leet_mode():
-    pass
-
-def getinputs(morewords):
-    morewords = morewords.split()
-    return morewords
-
-def write_password(filename,target,elements,length,extras,filewords):
-    full_items_list = []
-    for i in target:
-        full_items_list.append(i.lower())
-        full_items_list.append(i.upper())
-        full_items_list.append(i.capitalize())
-        full_items_list.append(i.lower()[::-1])
-        full_items_list.append(i.upper()[::-1])
-        full_items_list.append(i.capitalize()[::-1])
-        full_items_list.append(i[::-1].lower())
-        full_items_list.append(i[::-1].upper())
-        full_items_list.append(i[::-1].capitalize())
-        full_items_list.append(i[0].lower())
-        full_items_list.append(i[0].upper())
-    for j in elements:
-        full_items_list.append(j.lower())
-        full_items_list.append(j.upper())
-        full_items_list.append(j.capitalize())
-    for k in extras:
-        full_items_list.append(k.lower())
-        full_items_list.append(k.upper())
-        full_items_list.append(k.capitalize())
-    for l in filewords:
-        full_items_list.append(l)
-    addons_num = make_number_addons()
-
-    el = []
-    for item in full_items_list:
-        if item not in el:
-            el.append(item)
-
-    if (type(length)==range):
-        with open(filename, 'w') as f:
-            for i in el:
-                for j in el:
-                    if (len(i) in length):
-                        f.write(i)
-                        f.write("\n")
-                    if (len(i+j) in length):
-                        f.write(i+j)
-                        f.write("\n")
-                    if extras[0].lower() == "y":
-                        for k in addons_num:
-                            if (len(i+k) in length):
-                                f.write(i+k)
-                                f.write("\n")
-                            if (len(i+j+k) in length):
-                                f.write(i+j+k)
-                                f.write("\n")
-                    if extras[1].lower() == "y":
-                        pass
-                    if extras[2].lower() == "y":
-                        pass
-    else:
-        with open(filename, 'w') as f:
-            for i in el:
-                for j in el:
-                    if (len(i) == length):
-                        f.write(i)
-                        f.write("\n")
-                    if (len(i+j) in length):
-                        f.write(i+j)
-                        f.write("\n")
-                    if extras[0].lower() == "y":
-                        for k in addons_num:
-                            if (len(i+k) in length):
-                                f.write(i+k)
-                                f.write("\n")
-                            if (len(i+j+k) in length):
-                                f.write(i+j+k)
-                                f.write("\n")
-                    if extras[1].lower() == "y":
-                        pass
-                    if extras[2].lower() == "y":
-                        pass 
-                          
-
-    # print(full_items_list)
-    # print(filename)
-    # with open(filename,'rw') as f:
-    #     #TODO: Combine 2 words, combine 3 words, first initial of target names, backwards target names, capital first initial, capital whole words
-    #     #TODO: Potentially append random numbers and common numbers and special characters
-    #     if(type(length)==range):
-    #         if(len(itertools.permutations([full_items_list])) in length):
-    #             f.write(itertools.permutations([full_items_list]))
-    #     else:
-    #         if(len(itertools.permutations([full_items_list])) == length):
-    #             f.write(itertools.permutations([full_items_list]))
 
 def mode1():
+    def nameparser(listofnames):
+        retlist = []
+        for i in listofnames:
+            retlist.append(i.upper())
+            retlist.append(i.lower())
+            retlist.append(i.capitalize())
+            retlist.append(i.capitalize().swapcase())
+            retlist.append(i.upper()[::-1])
+            retlist.append(i.lower()[::-1])
+            retlist.append(i.capitalize()[::-1])
+            retlist.append(i.capitalize().swapcase()[::-1])
+            try:
+                retlist.append(i[0].upper())
+                retlist.append(i[0].lower())
+            except:
+                pass
+        return retlist
+
+    def wordparser(listofwords):
+        retlist = []
+        for i in listofwords:
+            retlist.append(i.upper())
+            retlist.append(i.lower())
+            retlist.append(i.capitalize())
+            retlist.append(i.capitalize().swapcase())
+        return retlist
+
+    def addcomwords(comwords):
+        comwordlist = ["password","pass","secret","private"]
+        nums = ["0","1","2","3","4","5","6","7","8","9"]
+        retlist = []
+        if comwords.lower() == "y":
+            for i in comwordlist:
+                retlist.append(i.upper())
+                retlist.append(i.lower())
+                retlist.append(i.capitalize())
+                retlist.append(i.capitalize().swapcase())
+        return retlist
+    
+    def removeduplicate(inputlist):
+        outputlist = []
+        for i in inputlist:
+            if i not in outputlist:
+                outputlist.append(i)
+        return outputlist
+    
+    def makepasswords(WL,num):
+        retlist = []
+        try:
+            number = int(num)
+        except:
+            number = 2
+        for j in range(number+1):
+            perms = list(itertools.permutations(WL,j))
+            for i in perms:
+                retlist.append(''.join(i))
+        return retlist
+        
+    def makepasswordsspecial(WL,num,spec):
+        retlist = []
+        try:
+            number = int(num)
+        except:
+            number = 2
+        for j in range(number+1):
+            perms = list(itertools.permutations(WL,j))
+            for i in perms:
+                for k in spec:
+                    retlist.append(k.join(i))
+        return retlist
+    
+    # def addseparator(wordslist, wordcombos, specchar):
+    #     retlist = []
+    #     for j in range(wordcombos):
+    #         perms = list(itertools.permutations(wordslist,j))
+    #         for i in perms:
+    #             for k in specchar:
+    #                 retlist.append(k.join(i)) 
+    #     return retlist
+    
+    def addnums(passwords, yn):
+        retlist = []
+        if yn.lower() == "y" or yn.lower() == "yes":
+            try:
+                numbercomobos = int(input("how many digits do you want to include (default = 3)?: "))
+            except:
+                numbercomobos = 3
+            for i in passwords:
+                for n in range(numbercomobos+1):
+                    for p in itertools.product(numbers, repeat=n):
+                        retlist.append(i+''.join(p))
+        return retlist
+
+    def makeleetmode(inputlist,yn):
+        retlist = []
+        if yn.lower() == "y" or yn.lower() == "yes":
+            leeter = LeetSpeaker(mode="basic", get_all_combs=True)
+            for i in inputlist:
+                try:
+                    leets = leeter.text2leet(i)
+                except:
+                    leets = []
+                retlist += leets
+        return retlist
+        
+    filename = input("What would you like your file to be called (include extension)(default: file.list)?: ")
     masterlist = []
-    filename = input("What do you want your file to be called (include file extension. (example file.txt) .txt or .list is recommended) default = file.txt: ")
-    print("")
-    if filename == "":
-        filename = "file.txt"
-    firstname = input("What's your target's first name?: ")
-    nickname = input("What is your target's nickname?: ")
-    lastname = input("What's your target's last name?: ")
-    middlename = input("What's your target's middle name?: ")
-    print("")
-    company = input("What's your target's company or website?: ")
-    company_acronyms = input("What's your target's company or website acronyms or shortened name?: ")
-    print("")
-    birthday_month = input("What is your target's birth month? (month number): ")
-    birthday_day = input("What is your target's birth day?: ")
-    birthday_year = input("What is your target's birth year?: ")
-    print("")
-    spouse_name = input("What is your target's spouse's name?: ")
-    child_name = input("What is your target's child's name? (can add multiple with spaces like 'John Jane Jerry'): ")
-    pet_name = input("What is your target's pet's name? (Can add multiple with spaces like 'Boxer Rex Gilgamesh')")
-    print("")
-    other_words = input("List any other words or characters you want to use like favorite movie, character, website name: ")
-    print("")
-    password_length = input("What is the min and max password length ('8 12' or just '8' if you want a password of 8 characters) (default 6-18): ")
-    print("")
-    append_num = input("Do you want to append common numbers to the end? (y/n): ")
-    spec_char = input("Do you want to append special characters? (y/n): ")
-    leetmode = input("Do you want to use 1337 mode? (y/n): ")
-    inputfile = input("Filename to read items from? (words must be separated with new line or space): ")
-    filewords = parsefile(inputfile)
-    target = []
-    for i in getinputs(firstname):
-        target.append(i)
-    for l in getinputs(nickname):
-        target.append(l)
-    for j in getinputs(lastname):
-        target.append(j)
-    for k in getinputs(middlename):
-        target.append(k)
+    firstname = input("What is your target's first name?: ")
+    midname = input("What is your target's middle name?: ")
+    lastname = input("What is your target's last name?: ")
+    nickname = input("What is your target's nick name?: ")
+    masterlist += nameparser([firstname,midname,lastname,nickname])
 
+    pet = input("What is your target's pet's name?: ")
+    spouse = input("What is your target's spouse's name?: ")
+    kid1 = input("What is your target's child's or sibling's name?: ")
+    kid2 = input("What is your target's other child's or sibling's name?: ")
+    kid3 = input("What is your target's other other child's or sibling's name?: ")
+    streetaddress = input("What is your target's street name?: ")
+    college = input("What is your target's college?: ")
+    highschool = input("What is your target's highschool?: ")
+    masterlist += wordparser([pet,spouse,kid1,kid2,kid3,streetaddress,college,highschool])
+    
+    otherwords = input("Please include other words you want separated by spaces: ").split()
+    masterlist += wordparser(otherwords)
 
-    masterlist.append(getinputs(company))
-    masterlist.append(getinputs(company_acronyms))
-    masterlist.append(getinputs(birthday_month))
-    masterlist.append(getinputs(birthday_day))
-    masterlist.append(getinputs(birthday_year))
+    #OPTIONS
+    comwords = input("Do you want to include common passwords/password words (y/n)?: ")
+    masterlist += addcomwords(comwords)
+
+    wordslist = removeduplicate(masterlist)
+
+    passlist = wordslist
+    wordcombos = input("How many combinations of words do you want to use (integer 1-5) (default 2): ")
     try:
-        masterlist.append(months[int(birthday_month)-1])
+        wordcombos = int(wordcombos)
     except:
-        pass
-    masterlist.append(getinputs(spouse_name))
-    masterlist.append(getinputs(child_name))
-    masterlist.append(getinputs(pet_name))
-    masterlist.append(getinputs(other_words))
-    wordlist = []
-    for i in masterlist:
-        for j in i:
-            wordlist.append(j)
-    password_length = getinputs(password_length)
-    try:
-        if len(password_length) == 1:
-            pass_length = int(password_length[0])
-        else:
-            pass_length = range(int(password_length[0]),int(password_length[1])+1)
-    except:
-        pass_length = range(6,19)
-    extras = [append_num, spec_char, leetmode]
-    write_password(filename, target, wordlist,pass_length,extras,filewords)
+        wordcombos =  2
+    passlist += makepasswords(wordslist, wordcombos)
+    passlist = removeduplicate(passlist)
 
+    specchar = input("list characters you want to separate words with (sparate input by spaces): ").split()
+    passlist += makepasswordsspecial(wordslist, wordcombos, specchar)
+
+    numatends = input("Would you like to include numbers at the end (y/n)?: ")
+    passlist += addnums(passlist,numatends)
+
+    leetmode = input("Would you like to include 1337 mode (y/n)?: ")
+    passlist += makeleetmode(passlist,leetmode)
+
+    try:
+        f = open(filename, "w")
+    except:
+        f = open("file.list", "w")
+
+    for item in passlist:
+        f.write(item)
+        f.write("\n")
+
+        
+    
 def mode2():
     return("Mode 2")
 
@@ -266,3 +223,4 @@ args = parser.parse_args()
 
 func = mode_dict[args.mode[0]]
 func()
+

@@ -18,3 +18,6 @@ TBD
 
 ## Mode 2)
 TBD
+
+Use a python venv to install pyleetspeak with
+    `pip install pyleetspeak`
