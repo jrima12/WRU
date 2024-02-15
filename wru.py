@@ -2,6 +2,8 @@
 #       Change itertools permutation to itertools product for repeating words
 #       Make options of common number patterns
 #       Add Special Characters to the end
+#       make own methods instead of pyleetspeak
+#       add separators in usernames and emails
 
 import argparse
 import itertools
@@ -21,11 +23,10 @@ mode_help = """
         1) Interactive password generator \n
         2) Interactive username generator\n
         3) Interactive email generator\n
-        4) Interactive wordsmith
-        5) Generate pin numbers
+        4) File Upload username generator\n
+        5) File upload email generator\n
+        6) Generate pin numbers
 """       
-
-
 
 def mode1():
     def nameparser(listofnames):
@@ -99,15 +100,6 @@ def mode1():
                     retlist.append(k.join(i))
         return retlist
     
-    # def addseparator(wordslist, wordcombos, specchar):
-    #     retlist = []
-    #     for j in range(wordcombos):
-    #         perms = list(itertools.permutations(wordslist,j))
-    #         for i in perms:
-    #             for k in specchar:
-    #                 retlist.append(k.join(i)) 
-    #     return retlist
-    
     def addnums(passwords, yn):
         retlist = []
         if yn.lower() == "y" or yn.lower() == "yes":
@@ -132,7 +124,9 @@ def mode1():
                     leets = []
                 retlist += leets
         return retlist
-        
+    print("")
+    print("")
+    print("")
     filename = input("What would you like your file to be called (include extension)(default: file.list)?: ")
     masterlist = []
     firstname = input("What is your target's first name?: ")
@@ -140,7 +134,7 @@ def mode1():
     lastname = input("What is your target's last name?: ")
     nickname = input("What is your target's nick name?: ")
     masterlist += nameparser([firstname,midname,lastname,nickname])
-
+    print("")
     pet = input("What is your target's pet's name?: ")
     spouse = input("What is your target's spouse's name?: ")
     kid1 = input("What is your target's child's or sibling's name?: ")
@@ -150,14 +144,14 @@ def mode1():
     college = input("What is your target's college?: ")
     highschool = input("What is your target's highschool?: ")
     masterlist += wordparser([pet,spouse,kid1,kid2,kid3,streetaddress,college,highschool])
-    
+    print("")
     otherwords = input("Please include other words you want separated by spaces: ").split()
     masterlist += wordparser(otherwords)
-
+    print("")
     #OPTIONS
     comwords = input("Do you want to include common passwords/password words (y/n)?: ")
     masterlist += addcomwords(comwords)
-
+    print("")
     wordslist = removeduplicate(masterlist)
 
     passlist = wordslist
@@ -186,14 +180,175 @@ def mode1():
     for item in passlist:
         f.write(item)
         f.write("\n")
-
-        
-    
+  
 def mode2():
-    return("Mode 2")
+
+    def make_users_cap(masterlist):
+        retlist = []
+        for i in masterlist:
+            helplist = []
+            for j in i:
+                print(j)
+                try:
+                    helplist.append(j.lower())
+                    helplist.append(j.upper())
+                    helplist.append(j.capitalize())
+                    helplist.append(j[0].lower())
+                    helplist.append(j[0].upper())
+                    if(len(j) > 1):
+                        helplist.append(j[:2].lower())
+                        helplist.append(j[:2].upper())
+                        helplist.append(j[:2].capitalize())
+                    if(len(j) > 2):
+                        helplist.append(j[:3].lower())
+                        helplist.append(j[:3].upper())
+                        helplist.append(j[:3].capitalize())
+                    if(len(j) > 5):
+                        helplist.append(j[:6].lower())
+                        helplist.append(j[:6].upper())
+                        helplist.append(j[:6].capitalize())
+                    if(len(j) > 7):
+                        helplist.append(j[:8].lower())
+                        helplist.append(j[:8].upper())
+                        helplist.append(j[:8].capitalize())
+                except:
+                    pass
+            # print(helplist)
+            # print(list(itertools.permutations(helplist, 2)))
+            for k in list(itertools.permutations(helplist, 2)):
+                retlist.append(''.join(k))
+        return retlist
+
+    def make_users_no_cap(masterlist):
+        retlist = []
+        for i in masterlist:
+            helplist = []
+            for j in i:
+                print(j)
+                try:
+                    helplist.append(j.lower())
+                    helplist.append(j[0].lower())
+                    if(len(j) > 1):
+                        helplist.append(j[:2].lower())
+                    if(len(j) > 2):
+                        helplist.append(j[:3].lower())
+                    if(len(j) > 5):
+                        helplist.append(j[:6].lower())
+                    if(len(j) > 7):
+                        helplist.append(j[:8].lower())
+                except:
+                    pass
+            # print(helplist)
+            # print(list(itertools.permutations(helplist, 2)))
+            for k in list(itertools.permutations(helplist, 2)):
+                retlist.append(''.join(k))
+        return retlist
+    
+    def removeduplicate(inputlist):
+            outputlist = []
+            for i in inputlist:
+                if i not in outputlist:
+                    outputlist.append(i)
+            return outputlist
+
+    print("")
+    print("")
+    filename = input("What would you like your file to be called (include extension)(default: file.list)?: ")
+    cap = input("does capitalization count? (default yes) (y/n): ")
+    print("")
+    print("")
+    masterlist = []
+    while(True):
+        toadd = []
+        firstname = input("Target's first name: ")
+        middlename = input("Target's middle name: ")
+        lastname = input("Target's last name: ")
+        toadd.extend([firstname, middlename, lastname])
+        masterlist.append(toadd)
+        cont = input("Add another? (Default = yes)(y/n):")
+        if (cont.lower() == "n"):
+            break
+    # print(masterlist)
+    if cap.lower() == "n" or cap.lower() == "no":
+        passlist = removeduplicate(make_users_no_cap(masterlist))
+    else:
+        passlist = removeduplicate(make_users_cap(masterlist))
+    try:
+        f = open(filename, "w")
+    except:
+        f = open("file.list", "w")
+
+    for item in passlist:
+        f.write(item)
+        f.write("\n")
 
 def mode3():
-    return("Mode 3")
+    def make_users_no_cap(masterlist):
+        retlist = []
+        for i in masterlist:
+            helplist = []
+            for j in i:
+                print(j)
+                try:
+                    helplist.append(j.lower())
+                    helplist.append(j[0].lower())
+                    if(len(j) > 1):
+                        helplist.append(j[:2].lower())
+                    if(len(j) > 2):
+                        helplist.append(j[:3].lower())
+                    if(len(j) > 5):
+                        helplist.append(j[:6].lower())
+                    if(len(j) > 7):
+                        helplist.append(j[:8].lower())
+                except:
+                    pass
+            # print(helplist)
+            # print(list(itertools.permutations(helplist, 2)))
+            for k in list(itertools.permutations(helplist, 2)):
+                retlist.append(''.join(k))
+        return retlist
+    
+    def removeduplicate(inputlist):
+            outputlist = []
+            for i in inputlist:
+                if i not in outputlist:
+                    outputlist.append(i)
+            return outputlist
+
+    def add_extensions(names, extension):
+        retlist = []
+        for i in names:
+            retlist.append(str(i)+"@"+str(extension))
+        return retlist
+
+    print("")
+    print("")
+    filename = input("What would you like your file to be called (include extension)(default: file.list)?: ")
+    print("")
+    print("")
+    masterlist = []
+    while(True):
+        toadd = []
+        firstname = input("Target's first name: ")
+        middlename = input("Target's middle name: ")
+        lastname = input("Target's last name: ")
+        toadd.extend([firstname, middlename, lastname])
+        masterlist.append(toadd)
+        cont = input("Add another? (Default = yes)(y/n):")
+        if (cont.lower() == "n"):
+            break
+    extension = input("What is the email extension you want to use? (don't include the @): ")
+
+    passlist = add_extensions(removeduplicate(make_users_no_cap(masterlist)), extension)
+
+    try:
+        f = open(filename, "w")
+    except:
+        f = open("file.list", "w")
+
+    for item in passlist:
+        f.write(item)
+        f.write("\n")
 
 def mode4():
     return("Mode 4")
@@ -201,13 +356,16 @@ def mode4():
 def mode5():
     return("Mode 5")
 
+def mode6():
+    return("Mode 6")
 
 mode_dict = {
     "1":mode1,
     "2":mode2,
     "3":mode3,
     "4":mode4,
-    "5":mode5
+    "5":mode5,
+    "6":mode6
 }
 
 parser = argparse.ArgumentParser(
