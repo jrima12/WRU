@@ -188,7 +188,6 @@ def mode2():
         for i in masterlist:
             helplist = []
             for j in i:
-                print(j)
                 try:
                     helplist.append(j.lower())
                     helplist.append(j.upper())
@@ -213,8 +212,6 @@ def mode2():
                         helplist.append(j[:8].capitalize())
                 except:
                     pass
-            # print(helplist)
-            # print(list(itertools.permutations(helplist, 2)))
             for k in list(itertools.permutations(helplist, 2)):
                 retlist.append(''.join(k))
         return retlist
@@ -224,7 +221,6 @@ def mode2():
         for i in masterlist:
             helplist = []
             for j in i:
-                print(j)
                 try:
                     helplist.append(j.lower())
                     helplist.append(j[0].lower())
@@ -238,8 +234,6 @@ def mode2():
                         helplist.append(j[:8].lower())
                 except:
                     pass
-            # print(helplist)
-            # print(list(itertools.permutations(helplist, 2)))
             for k in list(itertools.permutations(helplist, 2)):
                 retlist.append(''.join(k))
         return retlist
@@ -268,7 +262,7 @@ def mode2():
         cont = input("Add another? (Default = yes)(y/n):")
         if (cont.lower() == "n"):
             break
-    # print(masterlist)
+    print(masterlist)
     if cap.lower() == "n" or cap.lower() == "no":
         passlist = removeduplicate(make_users_no_cap(masterlist))
     else:
@@ -288,7 +282,6 @@ def mode3():
         for i in masterlist:
             helplist = []
             for j in i:
-                print(j)
                 try:
                     helplist.append(j.lower())
                     helplist.append(j[0].lower())
@@ -302,8 +295,6 @@ def mode3():
                         helplist.append(j[:8].lower())
                 except:
                     pass
-            # print(helplist)
-            # print(list(itertools.permutations(helplist, 2)))
             for k in list(itertools.permutations(helplist, 2)):
                 retlist.append(''.join(k))
         return retlist
@@ -351,7 +342,102 @@ def mode3():
         f.write("\n")
 
 def mode4():
-    return("Mode 4")
+    def make_users_cap(masterlist):
+        retlist = []
+        for i in masterlist:
+            helplist = []
+            for j in i:
+                try:
+                    helplist.append(j.lower())
+                    helplist.append(j.upper())
+                    helplist.append(j.capitalize())
+                    helplist.append(j[0].lower())
+                    helplist.append(j[0].upper())
+                    if(len(j) > 1):
+                        helplist.append(j[:2].lower())
+                        helplist.append(j[:2].upper())
+                        helplist.append(j[:2].capitalize())
+                    if(len(j) > 2):
+                        helplist.append(j[:3].lower())
+                        helplist.append(j[:3].upper())
+                        helplist.append(j[:3].capitalize())
+                    if(len(j) > 5):
+                        helplist.append(j[:6].lower())
+                        helplist.append(j[:6].upper())
+                        helplist.append(j[:6].capitalize())
+                    if(len(j) > 7):
+                        helplist.append(j[:8].lower())
+                        helplist.append(j[:8].upper())
+                        helplist.append(j[:8].capitalize())
+                except:
+                    pass
+            for k in list(itertools.permutations(helplist, 2)):
+                retlist.append(''.join(k))
+        return retlist
+
+    def make_users_no_cap(masterlist):
+        retlist = []
+        for i in masterlist:
+            helplist = []
+            for j in i:
+                try:
+                    helplist.append(j.lower())
+                    helplist.append(j[0].lower())
+                    if(len(j) > 1):
+                        helplist.append(j[:2].lower())
+                    if(len(j) > 2):
+                        helplist.append(j[:3].lower())
+                    if(len(j) > 5):
+                        helplist.append(j[:6].lower())
+                    if(len(j) > 7):
+                        helplist.append(j[:8].lower())
+                except:
+                    pass
+            for k in list(itertools.permutations(helplist, 2)):
+                retlist.append(''.join(k))
+        return retlist
+    
+    def removeduplicate(inputlist):
+            outputlist = []
+            for i in inputlist:
+                if i not in outputlist:
+                    outputlist.append(i)
+            return outputlist
+
+    print("")
+    print("")
+    print("File should be a list of names First, Middle, Last, separated by spaces, with each name on a new line")
+    print("")
+    masterlist1 = []
+    masterlist = []
+    filename = input("What is the name of the file list of names?")
+    outfile = input("What would you like your file to be called (include extension)(default: file.list)?: ")
+    with open(filename, "r") as f:
+        for i in f:
+            masterlist1.append(i.rstrip('\n'))
+    print(masterlist1)
+
+    for i in masterlist1:
+        i = i.split(" ")
+        masterlist.extend([i])
+        print(i)
+
+    print(masterlist)
+
+    cap = input("do capital letters matter? (default yes) (y/n): ")
+    
+    if cap.lower() == "n" or cap.lower() == "no":
+        passlist = removeduplicate(make_users_no_cap(masterlist))
+    else:
+        passlist = removeduplicate(make_users_cap(masterlist))
+    try:
+        f = open(outfile, "w")
+    except:
+        f = open("file.list", "w")
+
+    for item in passlist:
+        f.write(item)
+        f.write("\n")
 
 def mode5():
     return("Mode 5")
