@@ -1,6 +1,8 @@
 # TODO:
 # GENERAL:
 #     make my own methods instead of pyleetspeak
+#     add help menu
+#     account for heifenated last names
 # MODE1:
 #     make different special character separators
 #     add repeats to itertools to use words more than once
@@ -8,6 +10,7 @@
 #     add option to append special characters to the end
 # MODES 2-5
 #     add separators like . or - between username
+#     add all 3 names together
 
 
 import argparse
