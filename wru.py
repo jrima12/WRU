@@ -1,9 +1,14 @@
-#TODO:  Make different special characters as separators
-#       Change itertools permutation to itertools product for repeating words
-#       Make options of common number patterns
-#       Add Special Characters to the end
-#       make own methods instead of pyleetspeak
-#       add separators in usernames and emails
+# TODO:
+# GENERAL:
+#     make my own methods instead of pyleetspeak
+# MODE1:
+#     make different special character separators
+#     add repeats to itertools to use words more than once
+#     add option to use or append common number patterns
+#     add option to append special characters to the end
+# MODES 2-5
+#     add separators like . or - between username
+
 
 import argparse
 import itertools
@@ -237,7 +242,7 @@ def mode2():
             for k in list(itertools.permutations(helplist, 2)):
                 retlist.append(''.join(k))
         return retlist
-    
+
     def removeduplicate(inputlist):
             outputlist = []
             for i in inputlist:
@@ -415,17 +420,12 @@ def mode4():
     with open(filename, "r") as f:
         for i in f:
             masterlist1.append(i.rstrip('\n'))
-    print(masterlist1)
 
     for i in masterlist1:
         i = i.split(" ")
         masterlist.extend([i])
-        print(i)
-
-    print(masterlist)
 
     cap = input("do capital letters matter? (default yes) (y/n): ")
-    
     if cap.lower() == "n" or cap.lower() == "no":
         passlist = removeduplicate(make_users_no_cap(masterlist))
     else:
@@ -440,10 +440,96 @@ def mode4():
         f.write("\n")
 
 def mode5():
-    return("Mode 5")
+    def make_users_no_cap(masterlist):
+        retlist = []
+        for i in masterlist:
+            helplist = []
+            for j in i:
+                try:
+                    helplist.append(j.lower())
+                    helplist.append(j[0].lower())
+                    if(len(j) > 1):
+                        helplist.append(j[:2].lower())
+                    if(len(j) > 2):
+                        helplist.append(j[:3].lower())
+                    if(len(j) > 5):
+                        helplist.append(j[:6].lower())
+                    if(len(j) > 7):
+                        helplist.append(j[:8].lower())
+                except:
+                    pass
+            for k in list(itertools.permutations(helplist, 2)):
+                retlist.append(''.join(k))
+        return retlist
+    
+    def removeduplicate(inputlist):
+            outputlist = []
+            for i in inputlist:
+                if i not in outputlist:
+                    outputlist.append(i)
+            return outputlist
+
+    def add_extension(inputlist, extension):
+        retlist = []
+        for i in inputlist:
+            retlist.append(str(i)+"@"+str(extension))
+        return retlist
+
+    print("")
+    print("")
+    print("File should be a list of names First, Middle, Last, separated by spaces, with each name on a new line")
+    print("")
+    masterlist1 = []
+    masterlist = []
+    filename = input("What is the name of the file list of names?")
+    outfile = input("What would you like your file to be called (include extension)(default: file.list)?: ")
+    with open(filename, "r") as f:
+        for i in f:
+            masterlist1.append(i.rstrip('\n'))
+
+    for i in masterlist1:
+        i = i.split(" ")
+        masterlist.extend([i])
+
+    extension = input("What email extension do you want to use?")
+
+    passlist = add_extension(removeduplicate(make_users_no_cap(masterlist)),extension)
+
+
+    try:
+        f = open(outfile, "w")
+    except:
+        f = open("file.list", "w")
+
+    for item in passlist:
+        f.write(item)
+        f.write("\n")
+
 
 def mode6():
-    return("Mode 6")
+    print("")
+    print("")
+    filename = input("What would you like your file to be called (include extension)(default: file.list)?: ")
+    print("")
+    print("")
+    while(True):
+        try:
+            length = int(input("How long do you want your pin?: "))
+            break
+        except:
+            print("please input a number")
+    passlist = []
+    for p in itertools.product(numbers, repeat=length):
+        passlist.append(''.join(p))
+
+    try:
+        f = open(filename, "w")
+    except:
+        f = open("file.list", "w")
+
+    for item in passlist:
+        f.write(item)
+        f.write("\n")
 
 mode_dict = {
     "1":mode1,
